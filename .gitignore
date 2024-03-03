@@ -1,32 +1,456 @@
-# Prerequisites
-*.d
+//It will work on Microsoft Visual Studio  
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <limits>
+using namespace std;
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
 
-# Precompiled Headers
-*.gch
-*.pch
+void Clear() {
+    system("CLS");
+}
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
 
-# Fortran module files
-*.mod
-*.smod
+class Course {
+public:
+    void DisplayMeetingDays() const;
+    void PrintCourseInformation() const;
+    void NewCourse();
+    int Select();
+    void SetName();
+    void SetCampus();
+    void SetDays();
+    void SetCredit();
+    void SetRoom();
+    void SetUniNumber();
+    void SetID();
+    void SetSection();
+    void SetProfessor();
+    void SetSize();
+    void AddStudents();
+    void DeleteCourse();
+    void DisplayAllCourses() const;
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
 
-# Executables
-*.exe
-*.out
-*.app
+    // Name of course
+    string courseName = "NoName";
+
+
+    // Size of Course (How many students can register)
+    int courseSize;
+
+
+    // University course identification Number
+    int courseNumber;
+
+
+    // Department Course Section Number
+    int courseSection;
+
+
+    // Number of credits for course
+    int courseCredit;
+
+
+    // Hour when Course begins (0-23)
+    int courseTimeBeginHour;
+
+
+    // Minute when Course begins (0-59)
+    int courseTimeBeginMinute;
+
+
+    // Hour when Course ends (0-23)
+    int courseTimeEndHour;
+
+
+    // Minute when Course ends (0-59)
+    int courseTimeEndMinute;
+
+
+    // Building ID where Course is
+    int courseBuilding;
+
+
+    // Course room #
+    int courseRoom;
+
+
+    // Max enrollment/seats in course
+    int courseEnrollMax;
+
+
+    // Course status (1 = Open, 2 = Closed, 0 = Canceled)
+    int courseStatus;
+
+
+    // Campus where the course is taking place
+    string courseCampus;
+
+
+    // Department Course ID
+    string courseID;
+
+
+    // Name of Course Instructor
+    string courseInstructor;
+
+
+    // Vector of days where the course is taking place
+    vector<bool> courseDays = { false, false, false, false, false, false, false };
+
+
+    // List of Student Names (Matches Student IDs)
+    vector<string> courseStudents;
+
+
+    // List of Student IDs (Matches Student Names)
+    vector<string> courseStudentID;
+
+
+    // Days of the Week
+    string daysOfWeek[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+
+
+    vector<Course> lecture;
+};
+
+
+void Course::DisplayMeetingDays() const {
+    for (int i = 0; i < 7; i++) {
+        if (courseDays.at(i)) {
+            cout << daysOfWeek[i] << ", ";
+        }
+    }
+}
+
+
+void Course::SetName() {
+    string name;
+    cout << "Please input Course Name" << endl;
+    getline(cin, name);
+    courseName = name;
+    cout << "Inputed Name: " << courseName << endl << endl;
+}
+
+
+
+
+void Course::SetCampus() {
+    string campus;
+    cout << "Please input Campus Name" << endl;
+    getline(cin, campus, '\n');
+    courseCampus = campus;
+    cout << "Inputed Campus: " << courseCampus << endl << endl;
+}
+
+
+void Course::SetCredit() {
+    int credit;
+    cout << "Please input Course Credit Amount" << endl;
+    cin >> credit;
+    cout << endl;
+    courseCredit = credit;
+    cout << "Inputed Credit: " << courseCredit << endl << endl;
+}
+
+
+void Course::SetUniNumber() {
+    int ID;
+    cout << "Please input University Course Identification Number" << endl;
+    cin >> ID;
+    cout << endl;
+    courseNumber = ID;
+    cout << "Inputed Identification Number: " << courseNumber << endl << endl;
+}
+
+
+void Course::SetID() {
+    string DepartID;
+    cout << "Please input Department Course ID" << endl;
+    cin.ignore(); // Ignore the newline character left in the buffer
+    getline(cin, DepartID, '\n');
+    courseID = DepartID;
+    cout << "Inputed Course ID: " << courseID << endl << endl;
+}
+
+
+void Course::SetSection() {
+    int section;
+    cout << "Please input Course Section #" << endl;
+    cin >> section;
+    cout << endl;
+    courseSection = section;
+    cout << "Inputed Section: " << courseSection << endl << endl;
+}
+
+
+void Course::SetSize() {
+    int size;
+    cout << "Please input Course Size (How many students can register): " << endl;
+    cin >> size;
+    cout << endl;
+    courseSize = size;
+    cout << "Inputed Size: " << courseSize << endl;
+}
+
+
+void Course::SetRoom() {
+    int room;
+    cout << "Please input Course Room #" << endl;
+    cin >> room;
+    cout << endl;
+    courseRoom = room;
+    cout << "Inputed Room: " << room << endl << endl;
+}
+
+
+void Course::SetProfessor() {
+    string Professor;
+    cout << "Please input Course Instructor" << endl;
+    cin.ignore(); // Ignore the newline character left in the buffer
+    getline(cin, Professor, '\n');
+    courseInstructor = Professor;
+    cout << "Inputed Instructor: " << courseInstructor << endl;
+}
+
+
+void Course::SetDays() {
+    int DayInput;
+    cout << "Input Days of Course: " << endl;
+    cout << "Monday = 1" << endl;
+    cout << "Tuesday = 2" << endl;
+    cout << "Wednesday = 3" << endl;
+    cout << "Thursday = 4" << endl;
+    cout << "Friday = 5" << endl;
+    cout << "Saturday = 6" << endl;
+    cout << "Sunday = 7" << endl << endl;
+    cout << "Please type 0 when Finished" << endl;
+
+
+    cin >> DayInput;
+    cout << endl;
+
+
+    while (DayInput != 0) {
+        DayInput = DayInput - 1;
+        for (int i = 0; i < 7; i++) {
+            if (i == DayInput) {
+                courseDays.at(i) = true;
+            }
+        }
+        for (int i = 0; i < 7; i++) {
+            if (courseDays.at(i) == true) {
+                cout << daysOfWeek[i] << endl;
+            }
+        }
+        cout << endl << endl << endl;
+        cin >> DayInput;
+    }
+}
+void Course::NewCourse() {
+    SetName();
+    SetCampus();
+    SetID();
+    SetUniNumber();
+    SetSection();
+    SetDays();
+    SetCredit();
+    SetRoom();
+    SetProfessor();
+}
+
+
+void Course::AddStudents() {
+    int selectedIndex = Select();
+    if (selectedIndex != -1) {
+        string studentName, studentID;
+
+
+        cout << "Enter student name: ";
+        cin.ignore();
+        getline(cin, studentName);
+
+
+        cout << "Enter student ID: ";
+        cin >> studentID;
+        // Explicitly specifying the iterator type
+        vector<string>::iterator it = find(courseStudentID.begin(), courseStudentID.end(), studentID);
+        if (it != lecture[selectedIndex].courseStudentID.end()) {
+            cout << "Student with ID " << studentID << " is already enrolled in the course." << endl;
+        }
+        else {
+            lecture[selectedIndex].courseStudents.push_back(studentName);
+            lecture[selectedIndex].courseStudentID.push_back(studentID);
+            cout << "Student " << studentName << " with ID " << studentID << " added to the course." << endl;
+        }
+    }
+}
+
+
+void Course::DeleteCourse() {
+    cout << "Enter the name of the course to delete: ";
+    string courseToDelete;
+    cin.ignore(); //remove undesirable characters from the input buffer
+    getline(cin, courseToDelete);
+
+
+    // Find the course in the vector of courses using a lambda function
+    // Using vector<Course>::iterator explicitly
+    vector<Course>::iterator it = find_if(lecture.begin(), lecture.end(), [&courseToDelete](const Course& obj) {
+        return obj.courseName == courseToDelete;
+        });
+
+
+    // Check if the course was found
+    if (it != lecture.end()) {
+        lecture.erase(it);
+        cout << "Course " << courseToDelete << " deleted successfully." << endl;
+    }
+    else {
+        cout << "Course " << courseToDelete << " not found." << endl;
+    }
+}
+
+
+void Course::PrintCourseInformation() const {
+    cout << "Course Information:" << endl;
+    cout << "Course Name: " << courseName << endl;
+    cout << "Campus: " << courseCampus << endl;
+    cout << "Course Room: " << courseRoom << endl;
+    cout << "Course Credit: " << courseCredit << endl;
+    cout << "Course Department ID: " << courseID << endl;
+    cout << "Course University ID: " << courseNumber << endl;
+    cout << "Course Section: " << courseSection << endl;
+    cout << "Course Instructor: " << courseInstructor << endl;
+
+
+    cout << "Course Meeting Days: ";
+    DisplayMeetingDays();
+    cout << endl;
+}
+
+
+
+
+void Course::DisplayAllCourses() const {
+    cout << "All Courses:" << endl;
+    for (const Course& course : lecture) {
+        course.PrintCourseInformation();
+        cout << "----------------------" << endl;
+    }
+}
+
+
+
+
+int Course::Select() {
+    string courseNameToSelect;
+    cout << "Enter the name of the course to select: ";
+    cin.ignore();
+    getline(cin, courseNameToSelect);
+
+
+    // Convert the input to uppercase to make the search case-insensitive
+    transform(courseNameToSelect.begin(), courseNameToSelect.end(), courseNameToSelect.begin(), ::toupper);
+
+
+    // Using vector<Course>::iterator explicitly
+    vector<Course>::iterator it = find_if(lecture.begin(), lecture.end(), [&courseNameToSelect](const Course& obj) {
+        string upperCaseName = obj.courseName;
+        transform(upperCaseName.begin(), upperCaseName.end(), upperCaseName.begin(), ::toupper);
+        return upperCaseName == courseNameToSelect;
+        });
+
+
+    if (it != lecture.end()) {
+        it->PrintCourseInformation();
+        return distance(lecture.begin(), it);
+    }
+    else {
+        cout << "Course '" << courseNameToSelect << "' not found." << endl;
+        return -1;
+    }
+}
+
+
+int main() {
+    Course courseSystem;
+    int Input;
+
+
+    while (true) {
+        cout << "1. New Course" << endl
+            << "2. Edit Course" << endl
+            << "3. Delete Course" << endl
+            << "4. Print Course Information" << endl
+            << "5. Print Student Information" << endl
+            << "6. Display All Courses" << endl
+            << "7. Add Students" << endl  // Option to add students
+            << "8. Quit Application" << endl;
+
+
+        cin >> Input;
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+
+        switch (Input) {
+        case 1:
+            courseSystem.lecture.push_back(Course());
+            courseSystem.lecture.back().NewCourse();
+            break;
+
+
+        case 2: {
+            int selectedIndex = courseSystem.Select();
+            if (selectedIndex != -1) {
+                // Edit the selected course (Add the editing logic here)
+            }
+            break;
+        }
+
+
+        case 3:
+            courseSystem.DeleteCourse();
+            break;
+
+
+        case 4: {
+            int selectedIndex = courseSystem.Select();
+            if (selectedIndex != -1) {
+                courseSystem.lecture[selectedIndex].PrintCourseInformation();
+            }
+            break;
+        }
+
+
+        case 5:
+            courseSystem.AddStudents();
+            break;
+
+
+        case 6:
+            courseSystem.DisplayAllCourses();
+            break;
+
+
+        case 7:
+            courseSystem.AddStudents();  // Option to add students
+            break;
+
+
+        case 8:
+            cout << "Application Terminated Successfully" << endl;
+            return 0;
+
+
+        default:
+            cout << "Invalid Input, Please select from options above" << endl;
+        }
+    }
+
+
+    return 0;
+}
+
